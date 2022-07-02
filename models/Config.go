@@ -5,11 +5,11 @@ import (
 	"log"
 )
 
-type config struct {
+type Config struct {
 	MalClientID string
 }
 
-var conf config
+var conf Config
 
 func GetMalClientID() string {
 	if _, err := toml.DecodeFile("config.toml", &conf); err != nil {

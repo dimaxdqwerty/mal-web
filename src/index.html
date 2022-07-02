@@ -2,9 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Home</title>
 </head>
-<body>
-    <h1>Hello</h1>
-</body>
+    <form action="/randomize" method="post">
+        {{template "genreSelector"}}</br>
+        Mean: <input type="text" name="mean"></br>
+        Number of episodes: <input type="text" name="numEpisodes"></br>
+        Start date: <input type="text" name="startDate"></br>
+        End date: <input type="text" name="endDate"></br>
+        Average episode duration: <input type="text" name="averageEpisodeDuration"></br>
+        <input type="submit" value="Randomize">
+    </form>
 </html>
