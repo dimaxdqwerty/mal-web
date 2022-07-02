@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{.anime.Title}}</title>
+</head>
+<body>
+    <div>
+        <h1>{{.anime.Title}}</h1>
+        <img alt="{{.anime.Title}}" src="{{.anime.MainPicture.Medium}}">
+        <br>
+        Genres: {{range .anime.Genres}} <b>{{.Name}}</b> {{end}}
+        <br>
+        Status: {{.anime.Status}}
+        <br>
+        Popularity: {{.anime.Popularity}} | Mean: {{.anime.Mean}}
+        <br>
+        Number of episodes: {{.anime.NumEpisodes}}
+        <br>
+        {{.anime.Synopsis}}
+    </div>
+</body>
+</html>
