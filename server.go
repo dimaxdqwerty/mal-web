@@ -14,6 +14,7 @@ func main() {
 	router = gin.Default()
 	router.LoadHTMLGlob("src/*")
 	router.Use(favicon.New("src/favicon.ico"))
+	router.Static("/assets", "./assets")
 
 	initializeRoutes()
 

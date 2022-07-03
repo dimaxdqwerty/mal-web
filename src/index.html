@@ -3,14 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 </head>
-    <form action="/randomize" method="post">
-        {{template "genreSelector"}}</br>
-        Mean: <input type="text" name="mean"></br>
-        Number of episodes: <input type="text" name="numEpisodes"></br>
-        Start date: <input type="text" name="startDate"></br>
-        End date: <input type="text" name="endDate"></br>
-        Average episode duration: <input type="text" name="averageEpisodeDuration"></br>
-        <input type="submit" value="Randomize">
-    </form>
+    <body class="bg-secondary">
+        {{template "header"}}
+        <div class="container col-md-4 col-md-offset-4 bg-dark text-white">
+            <form action="/randomize" method="post">
+                {{template "genreSelector"}}</br>
+                <div class="form-group">
+                    <label for="meanRange" class="form-label">Score Range</label>
+                    <input name="mean" type="range" class="form-range" min="0.5" max="10" step="0.5" id="meanRange">
+                </div>
+                <div class="form-group">
+                    <label for="episodesRange" class="form-label">Number of Episodes</label>
+                    <input name="numEpisodes" type="range" class="form-range" min="1" max="100" step="1" id="episodesRange">
+                </div>
+                <div class="form-group">
+                    <label for="yearRange" class="form-label">Year Range</label>
+                    <input name="numEpisodes" type="range" class="form-range" min="1940" max="2022" step="1" id="yearRange">
+                </div>
+                <div class="form-group">
+                    <label for="averageEpisodeDuration" class="form-label">Average Episode Duration (in minutes)</label>
+                    <input name="numEpisodes" type="range" class="form-range" min="1" max="60" step="1" id="averageEpisodeDuration">
+                </div>
+                <button type="submit" class="btn btn-primary mb-2">Randomize</button>
+            </form>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+    </body>
 </html>
