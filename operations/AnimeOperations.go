@@ -6,6 +6,7 @@ import (
 	"log"
 	"mal/models"
 	"net/http"
+	"strconv"
 )
 
 type AnimeList struct {
@@ -91,6 +92,19 @@ func GetWholeAnimeList() []AnimeList {
 		list = append(list, GetAnimeRankingListViaPaging(list[len(list)-1].Paging))
 	}
 	return list
+}
+
+func GetAnimeListByPage(page string) AnimeList {
+	limit, err := strconv.Atoi(page)
+	handleErr(err)
+
+	var offset string
+	if limit == 1 {
+		offset = "0"
+	} else {
+		offset = strconv.Itoa((limit - 1) * 50)
+	}
+	return GetAnimeRankingList("50", offset)
 }
 
 func handleErr(err error) {

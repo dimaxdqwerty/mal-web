@@ -6,6 +6,7 @@ import (
 	"log"
 	"mal/operations"
 	"net/http"
+	"strconv"
 )
 
 var router *gin.Engine
@@ -58,6 +59,28 @@ func initializeRoutes() {
 			"animeAll.html",
 			gin.H{
 				"list": list,
+			})
+	})
+	router.GET("/animeList", func(context *gin.Context) {
+		page := context.Query("page")
+		nextPage, err := strconv.Atoi(page)
+		handleErr(err)
+
+		previousPage := nextPage - 1
+		if nextPage <= 1 {
+			previousPage = 1
+		}
+		list := operations.GetAnimeListByPage(page)
+		context.HTML(
+			http.StatusOK,
+			"animeList.html",
+			gin.H{
+				"list":         list,
+				"previousPage": previousPage,
+				"next1":        nextPage + 1,
+				"next2":        nextPage + 2,
+				"next3":        nextPage + 3,
+				"nextPage":     nextPage + 1,
 			})
 	})
 }
