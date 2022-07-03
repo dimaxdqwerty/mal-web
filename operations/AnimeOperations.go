@@ -47,7 +47,7 @@ func GetAnimeByID(ID string) models.Anime {
 }
 
 func GetAnimeRankingList(limit string, offset string) AnimeList {
-	req, err := http.NewRequest("GET", GetAnimeQuery+"/ranking"+"?rankingType=all"+"&limit="+limit+"&offset="+offset, nil)
+	req, err := http.NewRequest("GET", GetAnimeQuery+"/ranking"+"?rankingType=all"+"&limit="+limit+"&offset="+offset+Fields, nil)
 	req.Header.Add("X-MAL-CLIENT-ID", MalClientID)
 	handleErr(err)
 
