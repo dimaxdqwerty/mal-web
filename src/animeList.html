@@ -10,10 +10,15 @@
         <div class="row">
             {{range .list.Data}}
             <div class="col-sm-6 mb-3">
-                <div class="card border border-primary col-sm" style="width: 18rem;">
-                    <img class="card-img-top img-thumbnail" src="{{.Node.MainPicture.Medium}}" alt="Card image cap">
+                <div class="card flex-row">
+                    <img class="card-img-left" src="{{.Node.MainPicture.Medium}}">
                     <div class="card-body">
-                        <a class="card-title" href="/anime/{{.Node.ID}}">{{.Node.Title}}</a>
+                        <a class="card-title " href="/anime/{{.Node.ID}}" style="font-size: 20px">{{.Node.Title}}</a>
+                        <br>
+                        <h6 class="card-text">({{range .Node.Genres}} {{.Name}}  {{end}})</h6>
+                        <p class="card-text overflow-auto" style="height: 120px;">{{.Node.Synopsis}}</p>
+                        <h5 class="card-text">Score: {{.Node.Mean}}</h5>
+                        <p class="card-text">{{.Node.MediaType}}, {{.Node.StartSeason.Year}}</p>
                     </div>
                 </div>
             </div>
