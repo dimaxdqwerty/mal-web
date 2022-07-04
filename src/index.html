@@ -4,31 +4,47 @@
     <meta charset="UTF-8">
     <title>Home</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css" integrity="sha512-mR/b5Y7FRsKqrYZou7uysnOdCIJib/7r5QeJMFvLNHNhtye3xJp1TdJVPLtetkukFn227nKpXD9OjUc09lx97Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/css/ion.rangeSlider.min.css"/>
+    
 </head>
     <body class="bg-secondary">
         {{template "header"}}
-        <div class="container col-md-4 col-md-offset-4 bg-dark text-white">
+        <div class="container col-md-4 col-md-offset-4 bg-dark text-white" style="margin-top: 30px">
             <form action="/randomize" method="post">
                 {{template "genreSelector"}}</br>
-                <div class="form-group">
-                    <label for="meanRange" class="form-label">Score Range</label>
-                    <input name="mean" type="range" class="form-range" min="0.5" max="10" step="0.5" id="meanRange">
+                <label class="form-label al">Score</label>
+                <div class="input-group">
+                    <input name="meanScoreFrom" type="number" class="form-control input-sm" min="0" max="10" step="0.5" placeholder="From"/>
+                    <span class="input-group-btn" style="width:0;"></span>
+                    <input name="meanScoreTo" type="number" class="form-control input-sm" min="0" max="10" step="0.5"  placeholder="To"/>
                 </div>
-                <div class="form-group">
-                    <label for="episodesRange" class="form-label">Number of Episodes</label>
-                    <input name="numEpisodes" type="range" class="form-range" min="1" max="100" step="1" id="episodesRange">
+                <label class="form-label">Number of Episodes</label>
+                <div class="input-group">
+                    <input name="numEpisodesFrom" type="number" class="form-control input-sm" min="1" max="100" step="1" placeholder="From"/>
+                    <span class="input-group-btn" style="width:0;"></span>
+                    <input name="numEpisodesTo" type="number" class="form-control input-sm" min="1" max="100" step="1"  placeholder="To"/>
                 </div>
-                <div class="form-group">
-                    <label for="yearRange" class="form-label">Year Range</label>
-                    <input name="numEpisodes" type="range" class="form-range" min="1940" max="2022" step="1" id="yearRange">
+                <label class="form-label">Year Range</label>
+                <div class="input-group">
+                    <input name="yearFrom" type="number" class="form-control input-sm" min="1940" max="2022" step="1" placeholder="From"/>
+                    <span class="input-group-btn" style="width:0;"></span>
+                    <input name="yearTo" type="number" class="form-control input-sm" min="1940" max="2022" step="1"  placeholder="To"/>
                 </div>
-                <div class="form-group">
-                    <label for="averageEpisodeDuration" class="form-label">Average Episode Duration (in minutes)</label>
-                    <input name="numEpisodes" type="range" class="form-range" min="1" max="60" step="1" id="averageEpisodeDuration">
+                <label class="form-label">Average Episode Duration (in minutes)</label>
+                <div class="input-group mb-4">
+                    <input name="durationFrom" type="number" class="form-control input-sm" min="1" step="1" placeholder="From"/>
+                    <span class="input-group-btn" style="width:0;"></span>
+                    <input name="durationTo" type="number" class="form-control input-sm" min="1" step="1" placeholder="To"/>
                 </div>
                 <button type="submit" class="btn btn-primary mb-2">Randomize</button>
             </form>
         </div>
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.6/dist/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js" integrity="sha512-FHZVRMUW9FsXobt+ONiix6Z0tIkxvQfxtCSirkKc5Sb4TKHmqq1dZa8DphF0XqKb3ldLu/wgMa8mT6uXiLlRlw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     </body>
 </html>

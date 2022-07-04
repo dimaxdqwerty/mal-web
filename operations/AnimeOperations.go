@@ -102,9 +102,9 @@ func GetAnimeListByPage(page string) AnimeList {
 	if limit == 1 {
 		offset = "0"
 	} else {
-		offset = strconv.Itoa((limit - 1) * 50)
+		offset = strconv.Itoa((limit - 1) * 60)
 	}
-	return GetAnimeRankingList("50", offset)
+	return GetAnimeRankingList("60", offset)
 }
 
 func handleErr(err error) {
