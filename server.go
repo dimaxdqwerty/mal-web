@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/thinkerou/favicon"
 	"log"
+	"mal/models"
 	"mal/operations"
 	"net/http"
 	"strconv"
@@ -43,15 +44,39 @@ func initializeRoutes() {
 				"anime": anime,
 			})
 	})
-	/*router.POST("randomize", func(context *gin.Context) {
+	router.POST("randomize", func(context *gin.Context) {
 		err := context.Request.ParseForm()
 		handleErr(err)
+
 		genres := context.PostFormArray("genres")
-		numEpisodes := context.PostForm("numEpisodes")
-		fmt.Println(genres)
-		fmt.Println(numEpisodes)
-		operations.GetRandomizedAnime()
-	})*/
+		meanScoreFrom := context.PostForm("meanScoreFrom")
+		meanScoreTo := context.PostForm("meanScoreTo")
+		numEpisodesFrom := context.PostForm("numEpisodesFrom")
+		numEpisodesTo := context.PostForm("numEpisodesTo")
+		yearFrom := context.PostForm("yearFrom")
+		yearTo := context.PostForm("yearTo")
+		durationFrom := context.PostForm("durationFrom")
+		durationTo := context.PostForm("durationTo")
+
+		randomAnime := operations.GetRandomizedAnime(&models.RandomizerForm{
+			Genres:          genres,
+			MeanScoreFrom:   meanScoreFrom,
+			MeanScoreTo:     meanScoreTo,
+			NumEpisodesFrom: numEpisodesFrom,
+			NumEpisodesTo:   numEpisodesTo,
+			YearFrom:        yearFrom,
+			YearTo:          yearTo,
+			DurationFrom:    durationFrom,
+			DurationTo:      durationTo,
+		})
+
+		context.HTML(
+			http.StatusOK,
+			"anime.html",
+			gin.H{
+				"anime": randomAnime.Node,
+			})
+	})
 	router.GET("/anime/all", func(context *gin.Context) {
 		list := operations.GetWholeAnimeList()
 		context.HTML(

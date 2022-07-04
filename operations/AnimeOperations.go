@@ -5,6 +5,8 @@ import (
 	"io/ioutil"
 	"log"
 	"mal/models"
+	"mal/utils"
+	"math/rand"
 	"net/http"
 	"strconv"
 )
@@ -81,8 +83,32 @@ func GetAnimeRankingListViaPaging(paging models.Paging) AnimeList {
 	return listViaPaging
 }
 
-func GetRandomizedAnime() models.Anime {
-	return models.Anime{}
+func GetRandomizedAnime(form *models.RandomizerForm) models.Data {
+	wholeAnimeList := GetWholeAnimeList()
+	var sortedDataList []models.Data
+
+	meanFrom, _ := strconv.ParseFloat(form.MeanScoreFrom, 32)
+	meanTo, _ := strconv.ParseFloat(form.MeanScoreTo, 32)
+	numEpisodesFrom, _ := strconv.Atoi(form.NumEpisodesFrom)
+	numEpisodesTo, _ := strconv.Atoi(form.NumEpisodesTo)
+	yearFrom, _ := strconv.Atoi(form.YearFrom)
+	yearTo, _ := strconv.Atoi(form.YearTo)
+	durationFrom, _ := strconv.Atoi(form.DurationFrom)
+	durationTo, _ := strconv.Atoi(form.DurationTo)
+
+	for _, list := range wholeAnimeList {
+		for _, data := range list.Data {
+			if utils.ContainsOneOfGenres(data.Node.Genres, form.Genres) &&
+				(data.Node.Mean >= meanFrom && data.Node.Mean <= meanTo) &&
+				(data.Node.NumEpisodes >= numEpisodesFrom && data.Node.NumEpisodes <= numEpisodesTo) &&
+				(data.Node.StartSeason.Year >= yearFrom && data.Node.StartSeason.Year <= yearTo) &&
+				(data.Node.AverageEpisodeDuration >= durationFrom*60 && data.Node.AverageEpisodeDuration <= durationTo*60) {
+				sortedDataList = append(sortedDataList, data)
+			}
+		}
+	}
+
+	return sortedDataList[rand.Intn(len(sortedDataList))]
 }
 
 func GetWholeAnimeList() []AnimeList {
