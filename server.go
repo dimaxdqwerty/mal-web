@@ -37,11 +37,14 @@ func initializeRoutes() {
 	router.GET("/anime/:id", func(context *gin.Context) {
 		id := context.Param("id")
 		anime := operations.GetAnimeByID(id)
+
+		averageEpisodeDurationMin := anime.AverageEpisodeDuration / 60
 		context.HTML(
 			http.StatusOK,
 			"anime.html",
 			gin.H{
-				"anime": anime,
+				"anime":                     anime,
+				"averageEpisodeDurationMin": averageEpisodeDurationMin,
 			})
 	})
 	router.POST("randomize", func(context *gin.Context) {
