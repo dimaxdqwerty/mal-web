@@ -9,6 +9,7 @@ import (
 	"math/rand"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 type AnimeList struct {
@@ -108,6 +109,7 @@ func GetRandomizedAnime(form *models.RandomizerForm) models.Data {
 		}
 	}
 
+	rand.Seed(time.Now().UnixNano())
 	return sortedDataList[rand.Intn(len(sortedDataList))]
 }
 
