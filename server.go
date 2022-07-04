@@ -70,12 +70,7 @@ func initializeRoutes() {
 			DurationTo:      durationTo,
 		})
 
-		context.HTML(
-			http.StatusOK,
-			"anime.html",
-			gin.H{
-				"anime": randomAnime.Node,
-			})
+		context.Redirect(http.StatusSeeOther, "/anime/"+strconv.Itoa(randomAnime.Node.ID))
 	})
 	router.GET("/anime/all", func(context *gin.Context) {
 		list := operations.GetWholeAnimeList()
