@@ -23,7 +23,6 @@ func main() {
 	router.Static("/assets", "./assets")
 
 	initializeRoutes()
-	dumpAnimeListJob()
 
 	go func() {
 		err := gocron.Every(2).Hours().Do(dumpAnimeListJob)
