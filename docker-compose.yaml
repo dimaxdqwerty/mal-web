@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+  server:
+    ports:
+      - "8080:8080"
+    container_name: server
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db-mal
+    networks:
+      - backend
+    
+networks:
+  backend:
+    driver: bridge

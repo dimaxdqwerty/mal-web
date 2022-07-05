@@ -140,3 +140,7 @@ func handleErr(err error) {
 		log.Fatal(err)
 	}
 }
+
+func DumpAnimeList() {
+
+}

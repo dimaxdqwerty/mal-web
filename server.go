@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/jasonlvhit/gocron"
 	"github.com/thinkerou/favicon"
 	"log"
 	"mal/models"
@@ -20,7 +21,13 @@ func main() {
 
 	initializeRoutes()
 
-	err := router.Run("localhost:8080")
+	go func() {
+		err := gocron.Every(10).Second().Do(dumpAnimeListJob)
+		handleErr(err)
+		<-gocron.Start()
+	}()
+
+	err := router.Run()
 	handleErr(err)
 }
 
@@ -112,4 +119,10 @@ func handleErr(err error) {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func dumpAnimeListJob() {
+	operations.DumpAnimeList()
+	/*_, time := gocron.NextRun()
+	fmt.Println("Next dump in ", time)*/
 }
