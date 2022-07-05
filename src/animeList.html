@@ -10,13 +10,13 @@
     {{template "header"}}
     <div class="container text-black">
         <div class="row">
-            {{range .list.Data}}
+            {{range .list}}
             <div class="col-sm-2 mb-3">
                 <div class="card">
-                    <img class="card-img-top" src="{{.Node.MainPicture.Medium}}">
+                    <img class="card-img-top" src="{{.MainPicture.Medium}}">
                     <div class="card-body">
-                        <a class="card-title text-nowrap text-truncate stretched-link" href="/anime/{{.Node.ID}}" style="font-size: 20px">{{.Node.Title}}</a>
-                        <p class="footer-text">{{.Node.MediaType}}, {{.Node.StartSeason.Year}}</p>
+                        <a class="card-title text-nowrap text-truncate stretched-link" href="/anime/{{.ID}}" style="font-size: 20px">{{.Title}}</a>
+                        <p class="footer-text">{{.MediaType}}, {{.StartSeason.Year}}</p>
                     </div>
                 </div>
             </div>

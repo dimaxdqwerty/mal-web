@@ -1,10 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/jasonlvhit/gocron"
 	"github.com/thinkerou/favicon"
 	"log"
+	"mal/db"
 	"mal/models"
 	"mal/operations"
 	"net/http"
@@ -12,6 +14,7 @@ import (
 )
 
 var router *gin.Engine
+var client = db.GetRedisClient()
 
 func main() {
 	router = gin.Default()
@@ -20,9 +23,10 @@ func main() {
 	router.Static("/assets", "./assets")
 
 	initializeRoutes()
+	dumpAnimeListJob()
 
 	go func() {
-		err := gocron.Every(10).Second().Do(dumpAnimeListJob)
+		err := gocron.Every(2).Hours().Do(dumpAnimeListJob)
 		handleErr(err)
 		<-gocron.Start()
 	}()
@@ -123,6 +127,6 @@ func handleErr(err error) {
 
 func dumpAnimeListJob() {
 	operations.DumpAnimeList()
-	/*_, time := gocron.NextRun()
-	fmt.Println("Next dump in ", time)*/
+	_, time := gocron.NextRun()
+	fmt.Println("Next dump in ", time)
 }

@@ -2,8 +2,10 @@ package operations
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
+	"mal/db"
 	"mal/models"
 	"mal/utils"
 	"math/rand"
@@ -29,22 +31,15 @@ var (
 		"recommendations,studios,statistics" //TODO: add related_manga field when RelatedManga struct will be added
 )
 
-var anime models.Anime
 var animeList AnimeList
+var client = db.GetRedisClient()
 
-func GetAnimeByID(ID string) models.Anime {
-	req, err := http.NewRequest("GET", GetAnimeQuery+"/"+ID+"?"+Fields, nil)
-	req.Header.Add("X-MAL-CLIENT-ID", MalClientID)
+func GetAnimeByID(ID string) models.Node {
+	node, err := client.Get(ID).Result()
 	handleErr(err)
+	var anime models.Node
 
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	handleErr(err)
-
-	body, err := ioutil.ReadAll(resp.Body)
-	handleErr(err)
-
-	err = json.Unmarshal(body, &anime)
+	err = json.Unmarshal([]byte(node), &anime)
 	handleErr(err)
 	return anime
 }
@@ -122,17 +117,23 @@ func GetWholeAnimeList() []AnimeList {
 	return list
 }
 
-func GetAnimeListByPage(page string) AnimeList {
+func GetAnimeListByPage(page string) []models.Node {
+	var nodeList []models.Node
 	limit, err := strconv.Atoi(page)
 	handleErr(err)
+	for i := (limit - 1) * 60; i < limit*60; i++ {
+		result, err := client.LIndex("animeList", int64(i)).Result()
+		handleErr(err)
 
-	var offset string
-	if limit == 1 {
-		offset = "0"
-	} else {
-		offset = strconv.Itoa((limit - 1) * 60)
+		fmt.Println(result)
+		var node models.Node
+		err = json.Unmarshal([]byte(result), &node)
+		handleErr(err)
+
+		nodeList = append(nodeList, node)
 	}
-	return GetAnimeRankingList("60", offset)
+
+	return nodeList
 }
 
 func handleErr(err error) {
@@ -142,5 +143,20 @@ func handleErr(err error) {
 }
 
 func DumpAnimeList() {
+	client.FlushAll()
+	list := GetWholeAnimeList()
+	var dataList []models.Node
+	for _, dataArray := range list {
+		for _, data := range dataArray.Data {
+			node, err := MarshalBinary(data.Node)
+			handleErr(err)
+			dataList = append(dataList, data.Node)
+			client.Set(strconv.Itoa(data.Node.ID), node, 0)
+			client.RPush("animeList", node)
+		}
+	}
+}
 
+func MarshalBinary(anime interface{}) ([]byte, error) {
+	return json.Marshal(anime)
 }

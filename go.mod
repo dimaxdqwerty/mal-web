@@ -5,6 +5,7 @@ go 1.18
 require (
 	github.com/BurntSushi/toml v1.1.0
 	github.com/gin-gonic/gin v1.8.1
+	github.com/go-redis/redis v6.15.5+incompatible
 	github.com/jasonlvhit/gocron v0.0.1
 	github.com/thinkerou/favicon v0.1.0
 )
