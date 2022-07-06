@@ -3,8 +3,8 @@ package operations
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/go-redis/redis"
 	"io/ioutil"
-	"log"
 	"mal/db"
 	"mal/models"
 	"mal/utils"
@@ -133,8 +133,6 @@ func GetAnimeListByPage(page string) []models.Node {
 	for i := (limit - 1) * 60; i < limit*60; i++ {
 		result, err := client.LIndex("animeList", int64(i)).Result()
 		handleErr(err)
-
-		fmt.Println(result)
 		var node models.Node
 		err = json.Unmarshal([]byte(result), &node)
 		handleErr(err)
@@ -147,7 +145,7 @@ func GetAnimeListByPage(page string) []models.Node {
 
 func handleErr(err error) {
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err.Error())
 	}
 }
 
@@ -161,8 +159,28 @@ func DumpAnimeList() {
 			dataList = append(dataList, data.Node)
 			client.Set(strconv.Itoa(data.Node.ID), node, 0)
 			client.RPush("animeList", node)
+			for _, genre := range data.Node.Genres {
+				genreBinary, err := MarshalBinary(genre)
+				handleErr(err)
+				client.ZAdd("genres", redis.Z{Score: float64(genre.ID), Member: genreBinary})
+			}
 		}
 	}
+}
+
+func GetGenres() []models.Genres {
+	genresLen, err := client.ZCard("genres").Result()
+	handleErr(err)
+	result, err := client.ZRange("genres", 0, genresLen).Result()
+	handleErr(err)
+	var genres []models.Genres
+	for _, str := range result {
+		var genre models.Genres
+		err = json.Unmarshal([]byte(str), &genre)
+		handleErr(err)
+		genres = append(genres, genre)
+	}
+	return genres
 }
 
 func MarshalBinary(anime interface{}) ([]byte, error) {

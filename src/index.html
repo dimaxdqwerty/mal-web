@@ -12,7 +12,14 @@
         {{template "header"}}
         <div class="container col-md-4 col-md-offset-4 bg-dark text-white" style="margin-top: 30px">
             <form action="/randomize" method="post">
-                {{template "genreSelector"}}</br>
+                <div class="form-group">
+                    <label for="genreSelector">Select genres</label>
+                    <select class="form-control selectpicker" name="genres" id="genreSelector" multiple>
+                        {{range .genres}}
+                        <option>{{.Name}}</option>
+                        {{end}}
+                    </select>
+                </div>
                 <label class="form-label al">Score</label>
                 <div class="input-group">
                     <input name="meanScoreFrom" type="number" class="form-control input-sm" min="0" max="10" step="0.5" placeholder="From"/>

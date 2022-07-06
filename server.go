@@ -5,7 +5,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jasonlvhit/gocron"
 	"github.com/thinkerou/favicon"
-	"log"
 	"mal/db"
 	"mal/models"
 	"mal/operations"
@@ -43,12 +42,12 @@ func main() {
 
 func initializeRoutes() {
 	router.GET("/", func(context *gin.Context) {
-		//animeList := operations.GetAnimeRankingList("100", "0")
+		genres := operations.GetGenres()
 		context.HTML(
 			http.StatusOK,
 			"index.html",
 			gin.H{
-				//"list": animeList,
+				"genres": genres,
 			})
 	})
 	router.GET("/anime/:id", func(context *gin.Context) {
@@ -127,13 +126,16 @@ func initializeRoutes() {
 
 func handleErr(err error) {
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err.Error())
 	}
 }
 
 func dumpAnimeListJob() {
+	fmt.Println("Starting dumping...")
 	client.FlushAll()
+	fmt.Println("Flushed all data!")
 	operations.DumpAnimeList()
+	fmt.Println("Successfully dumped!")
 	_, time := gocron.NextRun()
 	fmt.Println("Next dump in ", time)
 }
