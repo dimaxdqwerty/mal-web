@@ -79,9 +79,13 @@ func GetAnimeRankingListViaPaging(paging models.Paging) AnimeList {
 	return listViaPaging
 }
 
-func GetRandomizedAnime(form *models.RandomizerForm) models.Data {
-	wholeAnimeList := GetWholeAnimeList()
-	var sortedDataList []models.Data
+func GetRandomizedAnime(form *models.RandomizerForm) models.Node {
+	animeListLen, err := client.LLen("animeList").Result()
+	handleErr(err)
+	wholeAnimeList, err := client.LRange("animeList", 0, animeListLen).Result()
+	handleErr(err)
+
+	var sortedNodeList []models.Node
 
 	meanFrom, _ := strconv.ParseFloat(form.MeanScoreFrom, 32)
 	meanTo, _ := strconv.ParseFloat(form.MeanScoreTo, 32)
@@ -92,20 +96,25 @@ func GetRandomizedAnime(form *models.RandomizerForm) models.Data {
 	durationFrom, _ := strconv.Atoi(form.DurationFrom)
 	durationTo, _ := strconv.Atoi(form.DurationTo)
 
-	for _, list := range wholeAnimeList {
-		for _, data := range list.Data {
-			if utils.ContainsOneOfGenres(data.Node.Genres, form.Genres) &&
-				(data.Node.Mean >= meanFrom && data.Node.Mean <= meanTo) &&
-				(data.Node.NumEpisodes >= numEpisodesFrom && data.Node.NumEpisodes <= numEpisodesTo) &&
-				(data.Node.StartSeason.Year >= yearFrom && data.Node.StartSeason.Year <= yearTo) &&
-				(data.Node.AverageEpisodeDuration >= durationFrom*60 && data.Node.AverageEpisodeDuration <= durationTo*60) {
-				sortedDataList = append(sortedDataList, data)
-			}
+	for i := 0; int64(i) < animeListLen; i++ {
+		var node models.Node
+		err = json.Unmarshal([]byte(wholeAnimeList[i]), &node)
+		handleErr(err)
+
+		if utils.ContainsOneOfGenres(node.Genres, form.Genres) &&
+			(node.Mean >= meanFrom && node.Mean <= meanTo) &&
+			(node.NumEpisodes >= numEpisodesFrom && node.NumEpisodes <= numEpisodesTo) &&
+			(node.StartSeason.Year >= yearFrom && node.StartSeason.Year <= yearTo) &&
+			(node.AverageEpisodeDuration >= durationFrom*60 && node.AverageEpisodeDuration <= durationTo*60) {
+			sortedNodeList = append(sortedNodeList, node)
 		}
 	}
 
 	rand.Seed(time.Now().UnixNano())
-	return sortedDataList[rand.Intn(len(sortedDataList))]
+
+	anime := sortedNodeList[rand.Intn(len(sortedNodeList))]
+
+	return anime
 }
 
 func GetWholeAnimeList() []AnimeList {
@@ -143,7 +152,6 @@ func handleErr(err error) {
 }
 
 func DumpAnimeList() {
-	client.FlushAll()
 	list := GetWholeAnimeList()
 	var dataList []models.Node
 	for _, dataArray := range list {

@@ -22,6 +22,13 @@ func main() {
 	router.Use(favicon.New("src/favicon.ico"))
 	router.Static("/assets", "./assets")
 
+	result, err := client.Keys("*").Result()
+	handleErr(err)
+
+	if len(result) == 0 {
+		dumpAnimeListJob()
+	}
+
 	initializeRoutes()
 
 	go func() {
@@ -30,7 +37,7 @@ func main() {
 		<-gocron.Start()
 	}()
 
-	err := router.Run()
+	err = router.Run()
 	handleErr(err)
 }
 
@@ -83,7 +90,7 @@ func initializeRoutes() {
 			DurationTo:      durationTo,
 		})
 
-		context.Redirect(http.StatusSeeOther, "/anime/"+strconv.Itoa(randomAnime.Node.ID))
+		context.Redirect(http.StatusSeeOther, "/anime/"+strconv.Itoa(randomAnime.ID))
 	})
 	router.GET("/anime/all", func(context *gin.Context) {
 		list := operations.GetWholeAnimeList()
@@ -125,6 +132,7 @@ func handleErr(err error) {
 }
 
 func dumpAnimeListJob() {
+	client.FlushAll()
 	operations.DumpAnimeList()
 	_, time := gocron.NextRun()
 	fmt.Println("Next dump in ", time)
