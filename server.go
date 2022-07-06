@@ -91,19 +91,11 @@ func initializeRoutes() {
 
 		context.Redirect(http.StatusSeeOther, "/anime/"+strconv.Itoa(randomAnime.ID))
 	})
-	router.GET("/anime/all", func(context *gin.Context) {
-		list := operations.GetWholeAnimeList()
-		context.HTML(
-			http.StatusOK,
-			"animeAll.html",
-			gin.H{
-				"list": list,
-			})
-	})
 	router.GET("/animeList", func(context *gin.Context) {
 		page := context.Query("page")
 		nextPage, err := strconv.Atoi(page)
 		handleErr(err)
+		genres := operations.GetGenres()
 
 		previousPage := nextPage - 1
 		if nextPage <= 1 {
@@ -115,6 +107,7 @@ func initializeRoutes() {
 			"animeList.html",
 			gin.H{
 				"list":         list,
+				"genres":       genres,
 				"previousPage": previousPage,
 				"next1":        nextPage + 1,
 				"next2":        nextPage + 2,
